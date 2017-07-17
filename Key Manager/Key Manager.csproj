@@ -7,7 +7,7 @@
     <ProjectGuid>{F95A58C9-88D6-402D-9D8B-F1A969EEDC88}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Key_Manager</RootNamespace>
+    <RootNamespace>spaar.Mods.KeyManager</RootNamespace>
     <AssemblyName>Key Manager</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -62,6 +62,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Keybinding.cs" />
+    <Compile Include="KeyGroup.cs" />
+    <Compile Include="KeyGroupEditInterface.cs" />
+    <Compile Include="KeyManager.cs" />
+    <Compile Include="KeyManagerInterface.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

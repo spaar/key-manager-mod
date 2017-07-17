@@ -2,28 +2,25 @@
 using spaar.ModLoader;
 using UnityEngine;
 
-namespace Key_Manager
+namespace spaar.Mods.KeyManager
 {
 
-  // If you need documentation about any of these values or the mod loader
-  // in general, take a look at https://spaar.github.io/besiege-modloader.
-
-  public class YourMod : Mod
+  public class KeyManagerMod : ModLoader.Mod
   {
-    public override string Name { get; } = "<placeholder>";
-    public override string DisplayName { get; } = "<placeholder>";
-    public override string Author { get; } = "<placeholder>";
-    public override Version Version { get; } = new Version(1, 0, 0);
+    public override string Name { get; } = "keyManager";
+    public override string DisplayName { get; } = "Key Manager";
+    public override string Author { get; } = "spaar";
+    public override Version Version { get; } = new Version(0, 0, 1);
 
     public override void OnLoad()
     {
-      // Your initialization code here
+      var manager = new KeyManager();
+      KeyManagerInterface.Instance.KeyManager = manager;
     }
 
     public override void OnUnload()
     {
-      // Your code here
-      // e.g. save configuration, destroy your objects if CanBeUnloaded is true etc
+      GameObject.Destroy(KeyManagerInterface.Instance);
     }
   }
 }
