@@ -204,6 +204,7 @@ namespace spaar.Mods.KeyManager
         if (GUILayout.Button("...", GUILayout.Width(40f)))
         {
           modifiyingGroup = group;
+          GUI.BringWindowToBack(WindowID);
         }
 
         if (GUILayout.Button(Textures.Delete, IconButtonStyle, GUILayout.Height(28f), GUILayout.Width(28f)))
