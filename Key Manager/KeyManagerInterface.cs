@@ -21,9 +21,22 @@ namespace spaar.Mods.KeyManager
       DontDestroyOnLoad(this);
     }
 
+    public void Update()
+    {
+      if (Game.AddPiece == null || StatMaster.isSimulating)
+      {
+        return;
+      }
+
+      if (modifiyingGroup != null)
+      {
+        editInterface.BuildingUpdate();
+      }
+    }
+
     public void OnGUI()
     {
-      if (Game.AddPiece == null)
+      if (Game.AddPiece == null || StatMaster.isSimulating)
       {
         return;
       }

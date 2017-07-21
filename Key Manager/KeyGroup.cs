@@ -42,5 +42,10 @@ namespace spaar.Mods.KeyManager
     {
       // TODO: Implement
     }
+
+    public bool HasBlock(BlockBehaviour block)
+    {
+      return bindings.Find(b => b.Block == block) != null;
+    }
   }
 }
