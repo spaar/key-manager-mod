@@ -4,9 +4,13 @@ namespace spaar.Mods.KeyManager
 {
   public class Keybinding
   {
-    public MKey Key { get; private set; }
     public int KeyIndex { get; private set; }
     public Guid Guid { get; private set; }
+
+    public MKey Key
+    {
+      get { return Block.Keys[KeyIndex]; }
+    }
 
     public BlockBehaviour Block
     {
@@ -17,10 +21,12 @@ namespace spaar.Mods.KeyManager
     {
       Guid = block.Guid;
       KeyIndex = keyIndex;
+    }
 
-      if (Block == null) throw new ArgumentException($"No such block: {block.Guid}", "block");
-
-      Key = block.Keys[keyIndex];
+    public Keybinding(Guid guid, int keyIndex)
+    {
+      Guid = guid;
+      KeyIndex = keyIndex;
     }
   }
 }

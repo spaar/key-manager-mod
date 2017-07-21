@@ -23,9 +23,14 @@ namespace spaar.Mods.KeyManager
       bindings = new List<Keybinding>();
     }
 
+    public void AddKeybinding(Keybinding binding)
+    {
+      bindings.Add(binding);
+    }
+
     public void AddKeybinding(BlockBehaviour block, int keyIndex)
     {
-      bindings.Add(new Keybinding(block, keyIndex));
+      AddKeybinding(new Keybinding(block, keyIndex));
     }
 
     public void RemoveKeybinding(Keybinding keybinding)
