@@ -40,7 +40,12 @@ namespace spaar.Mods.KeyManager
 
     public void SetKey(KeyCode keyCode)
     {
-      // TODO: Implement
+      Key = keyCode;
+
+      foreach (var binding in bindings)
+      {
+        binding.Key.AddOrReplaceKey(0, keyCode);
+      }
     }
 
     public bool HasBlock(BlockBehaviour block)
