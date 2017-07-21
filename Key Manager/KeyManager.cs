@@ -83,5 +83,51 @@ namespace spaar.Mods.KeyManager
     {
       groups.Remove(group);
     }
+
+    private struct AutoAddGroupId
+    {
+      public Type type;
+      public int keyIndex;
+      public KeyCode key;
+
+      public override bool Equals(object obj)
+      {
+        if (!(obj is AutoAddGroupId))
+          return false;
+        var other = (AutoAddGroupId) obj;
+        return other.type == type && other.keyIndex == keyIndex && other.key == key;
+      }
+    }
+
+    public void AutoAddGroups()
+    {
+      var groups = new Dictionary<AutoAddGroupId, KeyGroup>();
+
+      foreach (var block in Machine.Active().BuildingBlocks)
+      {
+        if (block.Keys.Count == 0) continue;
+
+        for (int i = 0; i < block.Keys.Count; i++)
+        {
+          var id = new AutoAddGroupId()
+          {
+            type = block.GetType(),
+            keyIndex = i,
+            key = block.Keys[i].KeyCode[0]
+          };
+
+          if (!groups.ContainsKey(id))
+          {
+            groups.Add(id, new KeyGroup($"{block.name} {block.Keys[i].DisplayName}", block.Keys[i].KeyCode[0]));
+          }
+          groups[id].AddKeybinding(block, i);
+        }
+      }
+
+      foreach (var group in groups.Values)
+      {
+        this.groups.Add(group);
+      }
+    }
   }
 }

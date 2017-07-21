@@ -161,7 +161,10 @@ namespace spaar.Mods.KeyManager
           KeyManager.CreateKeyGroup("New key group", KeyCode.None);
         }
 
-        GUILayout.Button("Auto-Add");
+        if (GUILayout.Button("Auto-Add"))
+        {
+          KeyManager.AutoAddGroups();
+        }
 
         GUILayout.EndHorizontal();
       }
