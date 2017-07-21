@@ -15,6 +15,8 @@ namespace spaar.Mods.KeyManager
     private Rect windowRect = new Rect(1100, 300, 350, 500);
     private Vector2 scrollPosition = new Vector2(0f, 0f);
 
+    private bool active = false;
+
     private bool editMode = false;
     private KeyGroup modifiyingGroup = null;
     private KeyGroupEditInterface editInterface = new KeyGroupEditInterface();
@@ -46,11 +48,18 @@ namespace spaar.Mods.KeyManager
     public void Start()
     {
       DontDestroyOnLoad(this);
+
+      new SettingsButton()
+      {
+        Text = "Keys",
+        Value = false,
+        OnToggle = val => active = val
+      }.Create();
     }
 
     public void Update()
     {
-      if (Game.AddPiece == null || StatMaster.isSimulating)
+      if (Game.AddPiece == null || StatMaster.isSimulating || !active)
       {
         return;
       }
@@ -85,7 +94,7 @@ namespace spaar.Mods.KeyManager
 
     public void OnGUI()
     {
-      if (Game.AddPiece == null || StatMaster.isSimulating)
+      if (Game.AddPiece == null || StatMaster.isSimulating || !active)
       {
         return;
       }
