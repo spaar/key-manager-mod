@@ -96,7 +96,8 @@ namespace spaar.Mods.KeyManager
       }
       else if (assigningBlocks)
       {
-        GUILayout.Label("Click non-highlighted blocks to add them to the key group, click highlighted blocks to remove them from the group.");
+        GUILayout.Label(@"Click non-highlighted blocks to add them to the key group.
+Click highlighted blocks to remove them from the group.");
         if (GUILayout.Button("Exit assignment mode"))
         {
           ExitBlockAssignmentMode();
