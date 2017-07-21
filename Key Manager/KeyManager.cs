@@ -67,6 +67,8 @@ namespace spaar.Mods.KeyManager
           }
           groups.Add(group);
         }
+
+        KeyManagerInterface.Instance.SetActive();
       };
 
       // TODO: Clear groups when deleting machine

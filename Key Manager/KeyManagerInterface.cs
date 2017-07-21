@@ -15,6 +15,7 @@ namespace spaar.Mods.KeyManager
     private Rect windowRect = new Rect(1100, 300, 350, 500);
     private Vector2 scrollPosition = new Vector2(0f, 0f);
 
+    private SettingsButton button;
     private bool active = false;
 
     private bool editMode = false;
@@ -45,16 +46,22 @@ namespace spaar.Mods.KeyManager
       KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.DownArrow
     };
 
+    public void SetActive()
+    {
+      button.Value = true;
+    }
+
     public void Start()
     {
       DontDestroyOnLoad(this);
 
-      new SettingsButton()
+      button = new SettingsButton()
       {
         Text = "Keys",
         Value = false,
         OnToggle = val => active = val
-      }.Create();
+      };
+      button.Create();
     }
 
     public void Update()
