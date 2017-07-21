@@ -12,7 +12,7 @@ namespace spaar.Mods.KeyManager
     public KeyManager KeyManager { get; set; }
 
     public readonly int WindowID = Util.GetWindowID();
-    private Rect windowRect = new Rect(1100, 300, 350, 500);
+    private Rect windowRect;
     private Vector2 scrollPosition = new Vector2(0f, 0f);
 
     private SettingsButton button;
@@ -62,6 +62,22 @@ namespace spaar.Mods.KeyManager
         OnToggle = val => active = val
       };
       button.Create();
+
+      windowRect.x = Configuration.GetFloat("main-x", 1100f);
+      windowRect.y = Configuration.GetFloat("main-y", 309);
+      windowRect.width = Configuration.GetFloat("main-width", 350);
+      windowRect.height = Configuration.GetFloat("main-height", 500);
+      editInterface.LoadWindowPosition();
+    }
+
+    public void OnUnload()
+    {
+      Configuration.SetFloat("main-x", windowRect.x);
+      Configuration.SetFloat("main-y", windowRect.y);
+      Configuration.SetFloat("main-width", windowRect.width);
+      Configuration.SetFloat("main-height", windowRect.height);
+      editInterface.SaveWindowPosition();
+      Configuration.Save();
     }
 
     public void Update()

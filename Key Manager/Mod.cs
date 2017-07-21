@@ -22,6 +22,7 @@ namespace spaar.Mods.KeyManager
 
     public override void OnUnload()
     {
+      KeyManagerInterface.Instance.OnUnload();
       GameObject.Destroy(KeyManagerInterface.Instance);
     }
   }

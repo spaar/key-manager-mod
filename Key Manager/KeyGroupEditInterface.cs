@@ -7,7 +7,7 @@ namespace spaar.Mods.KeyManager
   public class KeyGroupEditInterface
   {
     public readonly int WindowID = Util.GetWindowID();
-    private Rect windowRect = new Rect(1185, 480, 350, 140);
+    private Rect windowRect;
 
     private KeyGroup group;
 
@@ -19,6 +19,22 @@ namespace spaar.Mods.KeyManager
     {
       this.group = group;
       windowRect = GUI.Window(WindowID, windowRect, DoWindow, group.Name);
+    }
+
+    public void LoadWindowPosition()
+    {
+      windowRect.x = Configuration.GetFloat("groupedit-x", 1185);
+      windowRect.y = Configuration.GetFloat("groupedit-y", 480);
+      windowRect.width = Configuration.GetFloat("groupedit-width", 350);
+      windowRect.height = Configuration.GetFloat("groupedit-height", 140);
+    }
+
+    public void SaveWindowPosition()
+    {
+      Configuration.SetFloat("groupedit-x", windowRect.x);
+      Configuration.SetFloat("groupedit-y", windowRect.y);
+      Configuration.SetFloat("groupedit-width", windowRect.width);
+      Configuration.SetFloat("groupedit-height", windowRect.height);
     }
 
     public void BuildingUpdate()
@@ -130,6 +146,8 @@ Click highlighted blocks to remove them from the group.");
           EnterBlockAssignmentMode();
         }
       }
+
+      GUI.DragWindow();
     }
 
     private void EnterBlockAssignmentMode()
