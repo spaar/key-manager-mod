@@ -1,4 +1,5 @@
 ﻿using spaar.ModLoader;
+using spaar.ModLoader.UI;
 using UnityEngine;
 
 namespace spaar.Mods.KeyManager
@@ -6,7 +7,7 @@ namespace spaar.Mods.KeyManager
   public class KeyGroupEditInterface
   {
     public readonly int WindowID = Util.GetWindowID();
-    private Rect windowRect = new Rect(1075, 450, 350, 200);
+    private Rect windowRect = new Rect(1185, 480, 350, 140);
 
     private KeyGroup group;
 
@@ -103,15 +104,25 @@ namespace spaar.Mods.KeyManager
       }
       else
       {
-        if (GUILayout.Button("Close"))
+        var editRect = new Rect(windowRect.width - 40, 6, 32, 32);
+        if (GUI.Button(editRect, "X"))
         {
           KeyManagerInterface.Instance.CloseGroupEdit();
         }
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Name: ");
+
+        var textStyle = new GUIStyle(Elements.Labels.Title)
+        {
+          margin = { top = 12 },
+          fontSize = 15
+        };
+        GUILayout.Label("Name: ", textStyle);
+
         group.Name = GUILayout.TextField(group.Name);
         GUILayout.EndHorizontal();
+
+        GUILayout.FlexibleSpace();
 
         if (GUILayout.Button("(Un-)Assign blocks"))
         {

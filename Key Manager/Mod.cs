@@ -14,6 +14,8 @@ namespace spaar.Mods.KeyManager
 
     public override void OnLoad()
     {
+      Textures.Init();
+
       var manager = new KeyManager();
       KeyManagerInterface.Instance.KeyManager = manager;
     }
