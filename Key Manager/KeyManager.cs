@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using spaar.ModLoader;
 using UnityEngine;
 
 namespace spaar.Mods.KeyManager
@@ -66,7 +68,22 @@ namespace spaar.Mods.KeyManager
           groups.Add(group);
         }
 
+        // Show interface when loading a machine with key manager data.
         KeyManagerInterface.Instance.SetActive();
+      };
+
+      // When a block is deleted, delete any corresponding keybindings
+      Game.OnBlockRemoved += () =>
+      {
+        foreach (var group in groups)
+        {
+          foreach (var binding in new List<Keybinding>(group.AssignedBindings.Where(b => b.Block == null)))
+          {
+            group.RemoveKeybinding(binding);
+          }
+        }
+        // If any groups were completely emtpied by the above checks, delete them entirely
+        groups = new List<KeyGroup>(groups.Where(g => g.AssignedBindings.Count > 0));
       };
     }
 

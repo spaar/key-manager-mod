@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using spaar.ModLoader;
 using UnityEngine;
 
 namespace spaar.Mods.KeyManager
