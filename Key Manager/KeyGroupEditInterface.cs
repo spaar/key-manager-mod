@@ -24,17 +24,15 @@ namespace spaar.Mods.KeyManager
     public void LoadWindowPosition()
     {
       windowRect.x = Configuration.GetFloat("groupedit-x", 1185);
-      windowRect.y = Configuration.GetFloat("groupedit-y", 480);
-      windowRect.width = Configuration.GetFloat("groupedit-width", 350);
-      windowRect.height = Configuration.GetFloat("groupedit-height", 140);
+      windowRect.y = Configuration.GetFloat("groupedit-y", 460);
+      windowRect.width = 350;
+      windowRect.height = 180;
     }
 
     public void SaveWindowPosition()
     {
       Configuration.SetFloat("groupedit-x", windowRect.x);
       Configuration.SetFloat("groupedit-y", windowRect.y);
-      Configuration.SetFloat("groupedit-width", windowRect.width);
-      Configuration.SetFloat("groupedit-height", windowRect.height);
     }
 
     public void BuildingUpdate()
@@ -114,6 +112,12 @@ namespace spaar.Mods.KeyManager
       {
         GUILayout.Label(@"Click non-highlighted blocks to add them to the key group.
 Click highlighted blocks to remove them from the group.");
+
+        if (GUILayout.Button($"Assign all controls bound to {group.Key}"))
+        {
+          group.AddAllWithKey(group.Key);
+        }
+
         if (GUILayout.Button("Exit assignment mode"))
         {
           ExitBlockAssignmentMode();

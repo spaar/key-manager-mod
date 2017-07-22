@@ -33,6 +33,21 @@ namespace spaar.Mods.KeyManager
       AddKeybinding(new Keybinding(block, keyIndex));
     }
 
+    public void AddAllWithKey(KeyCode key)
+    {
+      foreach (var block in Machine.Active().BuildingBlocks)
+      {
+        for (int i = 0; i < block.Keys.Count; i++)
+        {
+          if (block.Keys[i].KeyCode[0] == key)
+          {
+            AddKeybinding(block, i);
+            break;
+          }
+        }
+      }
+    }
+
     public void RemoveKeybinding(Keybinding keybinding)
     {
       bindings.Remove(keybinding);

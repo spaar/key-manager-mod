@@ -65,8 +65,8 @@ namespace spaar.Mods.KeyManager
 
       windowRect.x = Configuration.GetFloat("main-x", 1100f);
       windowRect.y = Configuration.GetFloat("main-y", 309);
-      windowRect.width = Configuration.GetFloat("main-width", 350);
-      windowRect.height = Configuration.GetFloat("main-height", 500);
+      windowRect.width = 350;
+      windowRect.height = 500;
       editInterface.LoadWindowPosition();
     }
 
@@ -74,8 +74,6 @@ namespace spaar.Mods.KeyManager
     {
       Configuration.SetFloat("main-x", windowRect.x);
       Configuration.SetFloat("main-y", windowRect.y);
-      Configuration.SetFloat("main-width", windowRect.width);
-      Configuration.SetFloat("main-height", windowRect.height);
       editInterface.SaveWindowPosition();
       Configuration.Save();
     }
