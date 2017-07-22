@@ -50,7 +50,6 @@ namespace spaar.Mods.KeyManager
 
         for (int i = 0; i < count; i++)
         {
-          Debug.Log($"Group {i}");
           var groupTag = $"keymanager-group-{i}";
           var group = new KeyGroup(
             machineData.ReadString($"{groupTag}-name"),
@@ -58,7 +57,6 @@ namespace spaar.Mods.KeyManager
           var bindingsCount = machineData.ReadInt($"{groupTag}-bindings-count");
           for (int j = 0; j < bindingsCount; j++)
           {
-            Debug.Log($"Binding {j}");
             var bindingTag = $"{groupTag}-bindings-{j}";
             var binding = new Keybinding(
               new Guid(machineData.ReadString($"{bindingTag}-guid")),
@@ -70,8 +68,12 @@ namespace spaar.Mods.KeyManager
 
         KeyManagerInterface.Instance.SetActive();
       };
+    }
 
-      // TODO: Clear groups when deleting machine
+    public void ResetKeyGroups()
+    {
+      // Called by MachineObjectTracker patch when a new machine is created
+      groups.Clear();
     }
 
     public void CreateKeyGroup(string name, KeyCode key)

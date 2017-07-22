@@ -68,6 +68,7 @@
     <Compile Include="KeyManager.cs" />
     <Compile Include="KeyManagerInterface.cs" />
     <Compile Include="Mod.cs" />
+    <Compile Include="Patches\MachineObjectTrackerPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Textures.cs" />
   </ItemGroup>
