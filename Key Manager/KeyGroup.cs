@@ -25,6 +25,12 @@ namespace spaar.Mods.KeyManager
 
     public void AddKeybinding(Keybinding binding)
     {
+      // If the group does not yet have a key, use the one of the first assigned control
+      if (Key == KeyCode.None)
+      {
+        Key = binding.Key.KeyCode[0];
+      }
+
       bindings.Add(binding);
     }
 
