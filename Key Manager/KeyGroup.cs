@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace spaar.Mods.KeyManager
@@ -24,9 +25,9 @@ namespace spaar.Mods.KeyManager
       bindings = new List<Keybinding>();
     }
 
-    public KeyGroup(string name, KeyCode key) : this(name, new List<KeyCode>() {key})
+    public KeyGroup(string name, KeyCode key) : this(name, new List<KeyCode>() { key })
     {
-      
+
     }
 
     public void AddKeybinding(Keybinding binding)
@@ -34,7 +35,7 @@ namespace spaar.Mods.KeyManager
       // If the group does not yet have a key, use the one of the first assigned control
       if (Keys[0] == KeyCode.None)
       {
-        Keys[0] = binding.Key.KeyCode[0];
+        Keys.AddRange(binding.Key.KeyCode);
       }
 
       bindings.Add(binding);
@@ -45,16 +46,20 @@ namespace spaar.Mods.KeyManager
       AddKeybinding(new Keybinding(block, keyIndex));
     }
 
-    public void AddAllWithKey(KeyCode key)
+    public void AddAllWithKeys(List<KeyCode> keys)
     {
       foreach (var block in Machine.Active().BuildingBlocks)
       {
         for (int i = 0; i < block.Keys.Count; i++)
         {
-          if (block.Keys[i].KeyCode[0] == key)
+          if (block.Keys[i].KeyCode.SequenceEqual(keys.GetRange(0, keys.Count - 2)))
           {
-            AddKeybinding(block, i);
-            break;
+            // Don't add duplicates
+            if (!AssignedBindings.Any(b => b.Block == block && b.KeyIndex == i))
+            {
+              AddKeybinding(block, i);
+              break;
+            }
           }
         }
       }

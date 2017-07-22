@@ -1,4 +1,6 @@
-﻿using spaar.ModLoader;
+﻿using System;
+using System.Linq;
+using spaar.ModLoader;
 using spaar.ModLoader.UI;
 using UnityEngine;
 
@@ -25,7 +27,7 @@ namespace spaar.Mods.KeyManager
     {
       windowRect.x = Configuration.GetFloat("groupedit-x", 1185);
       windowRect.y = Configuration.GetFloat("groupedit-y", 460);
-      windowRect.width = 350;
+      windowRect.width = 370;
       windowRect.height = 180;
     }
 
@@ -113,9 +115,9 @@ namespace spaar.Mods.KeyManager
         GUILayout.Label(@"Click non-highlighted blocks to add them to the key group.
 Click highlighted blocks to remove them from the group.");
 
-        if (GUILayout.Button($"Assign all controls bound to {group.Keys[0]}"))
+        if (GUILayout.Button($"Assign all controls bound to {String.Join(" & ",group.Keys.GetRange(0, group.Keys.Count - 2).Select(k => k.ToString()).ToArray())}"))
         {
-          group.AddAllWithKey(group.Keys[0]);
+          group.AddAllWithKeys(group.Keys);
         }
 
         if (GUILayout.Button("Exit assignment mode"))
