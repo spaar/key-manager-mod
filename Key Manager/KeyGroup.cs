@@ -91,6 +91,15 @@ namespace spaar.Mods.KeyManager
       {
         binding.Key.AddOrReplaceKey(index, keyCode);
       }
+
+      // Search for duplicates. Settings a duplicate key deletes the later one of them.
+      for (int i = 0; i < Keys.Count; i++)
+      {
+        if (Keys[i] == keyCode && i != index)
+        {
+          Keys.RemoveAt(Math.Max(i, index));
+        }
+      }
     }
 
     public bool HasBlock(BlockBehaviour block)
