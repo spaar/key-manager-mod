@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using spaar.ModLoader;
 using spaar.ModLoader.Internal.Tools;
 using spaar.ModLoader.UI;
@@ -178,7 +179,7 @@ namespace spaar.Mods.KeyManager
         if (!editMode) modifiyingGroup = null;
       }
 
-      var groups = KeyManager.KeyGroups;
+      var groups = new List<KeyGroup>(KeyManager.KeyGroups);
 
       scrollPosition = GUILayout.BeginScrollView(scrollPosition);
       if (groups.Count > 0)
@@ -249,6 +250,20 @@ namespace spaar.Mods.KeyManager
         {
           modifiyingGroup = group;
           GUI.BringWindowToBack(WindowID);
+        }
+
+        if (GUILayout.Button("↑", index == 0
+          ? Elements.Buttons.Disabled
+          : Elements.Buttons.Default, GUILayout.Width(28f)))
+        {
+          KeyManager.MoveUp(index);
+        }
+
+        if (GUILayout.Button("↓", index == KeyManager.KeyGroups.Count - 1
+          ? Elements.Buttons.Disabled
+          : Elements.Buttons.Default, GUILayout.Width(28f)))
+        {
+          KeyManager.MoveDown(index);
         }
 
         if (GUILayout.Button(Textures.Delete, IconButtonStyle, GUILayout.Height(28f), GUILayout.Width(28f)))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using spaar.ModLoader;
 using UnityEngine;
 
@@ -126,6 +127,24 @@ namespace spaar.Mods.KeyManager
     public void DeleteKeyGroup(KeyGroup group)
     {
       groups.Remove(group);
+    }
+
+    public void MoveUp(int index)
+    {
+      if (index == 0) return;
+
+      var group = groups[index];
+      groups.Remove(group);
+      groups.Insert(index - 1, group);
+    }
+
+    public void MoveDown(int index)
+    {
+      if (index == groups.Count - 1) return;
+
+      var group = groups[index];
+      groups.Remove(group);
+      groups.Insert(index + 1, group);
     }
 
     private struct AutoAddGroupId
