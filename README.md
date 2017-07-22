@@ -3,6 +3,7 @@
 Key Manager is a mod for Besiege that allows bulk key remapping and easier discoverability of machine controls.
 Is is purely an additional feature for machines: If a user of the machine has the mod installed, they will get all the benefits
 but if they don't, the machine will still work just fine.
+The Key Manager also supports adding multiple keybinds to a single block control.
 
 ## Installation
 
