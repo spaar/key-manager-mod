@@ -1,5 +1,6 @@
 ﻿using System;
 using spaar.ModLoader;
+using spaar.ModLoader.Internal.Tools;
 using spaar.ModLoader.UI;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace spaar.Mods.KeyManager
     private Rect windowRect;
     private Vector2 scrollPosition = new Vector2(0f, 0f);
 
+    private Key toggleKey;
     private SettingsButton button;
     private bool active = false;
 
@@ -72,6 +74,9 @@ namespace spaar.Mods.KeyManager
       windowRect.width = 400;
       windowRect.height = 500;
       editInterface.LoadWindowPosition();
+
+      toggleKey = Keybindings.AddKeybinding("Key Manager",
+        new Key(KeyCode.RightControl, KeyCode.M));
     }
 
     public void OnUnload()
@@ -84,7 +89,18 @@ namespace spaar.Mods.KeyManager
 
     public void Update()
     {
-      if (Game.AddPiece == null || StatMaster.isSimulating || !active)
+      if (Game.AddPiece == null || StatMaster.isSimulating)
+      {
+        return;
+      }
+
+      if (toggleKey.Pressed())
+      {
+        Debug.Log("Toggling interface");
+        button.Value = !button.Value;
+      }
+
+      if (!active)
       {
         return;
       }
@@ -100,9 +116,10 @@ namespace spaar.Mods.KeyManager
           var key = KeyCode.None;
           try
           {
-            key = (KeyCode) Enum.Parse(typeof(KeyCode),
+            key = (KeyCode)Enum.Parse(typeof(KeyCode),
               (Input.inputString[0] + "").ToUpper());
-          } catch (Exception e) { }
+          }
+          catch (Exception e) { }
 
           if (key != KeyCode.None)
             currentGroupToMap.SetKey(currentKeyToMap, key);
@@ -248,7 +265,7 @@ namespace spaar.Mods.KeyManager
           GUILayout.Button(new GUIContent(group.Keys[i].ToString(), $"{tooltip}-{i}"),
             Elements.Buttons.Red, GUILayout.Width(110f));
           i++;
-        } while (group.Keys[i-1] != KeyCode.None);
+        } while (group.Keys[i - 1] != KeyCode.None);
       }
       GUILayout.EndHorizontal();
     }
