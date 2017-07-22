@@ -132,14 +132,14 @@ namespace spaar.Mods.KeyManager
     {
       public Type type;
       public int keyIndex;
-      public KeyCode key;
+      public List<KeyCode> keys;
 
       public override bool Equals(object obj)
       {
         if (!(obj is AutoAddGroupId))
           return false;
         var other = (AutoAddGroupId) obj;
-        return other.type == type && other.keyIndex == keyIndex && other.key == key;
+        return other.type == type && other.keyIndex == keyIndex && other.keys.SequenceEqual(keys);
       }
     }
 
@@ -157,12 +157,12 @@ namespace spaar.Mods.KeyManager
           {
             type = block.GetType(),
             keyIndex = i,
-            key = block.Keys[i].KeyCode[0]
+            keys = new List<KeyCode>(block.Keys[i].KeyCode)
           };
 
           if (!groups.ContainsKey(id))
           {
-            groups.Add(id, new KeyGroup($"{block.name} {block.Keys[i].DisplayName}", block.Keys[i].KeyCode[0]));
+            groups.Add(id, new KeyGroup($"{block.name} {block.Keys[i].DisplayName}", block.Keys[i].KeyCode));
           }
           groups[id].AddKeybinding(block, i);
         }
