@@ -26,6 +26,7 @@ namespace spaar.Mods.KeyManager
 
     // The mechanics of the "hover-to-remap" keymap technique are mostly taken from the mod loader's Keymapper
     private KeyGroup currentGroupToMap = null;
+    private int currentKeyToMap = -1;
     private static KeyCode[] SpecialKeys =
     {
       KeyCode.LeftControl, KeyCode.RightControl, KeyCode.LeftShift,
@@ -68,7 +69,7 @@ namespace spaar.Mods.KeyManager
 
       windowRect.x = Configuration.GetFloat("main-x", 1100f);
       windowRect.y = Configuration.GetFloat("main-y", 309);
-      windowRect.width = 350;
+      windowRect.width = 400;
       windowRect.height = 500;
       editInterface.LoadWindowPosition();
     }
@@ -96,8 +97,15 @@ namespace spaar.Mods.KeyManager
       {
         if (Input.inputString.Length > 0 && !Input.inputString.Contains('\u0008' + ""))
         {
-          currentGroupToMap.SetKey((KeyCode)Enum.Parse(typeof(KeyCode),
-            (Input.inputString[0] + "").ToUpper()));
+          var key = KeyCode.None;
+          try
+          {
+            key = (KeyCode) Enum.Parse(typeof(KeyCode),
+              (Input.inputString[0] + "").ToUpper());
+          } catch (Exception e) { }
+
+          if (key != KeyCode.None)
+            currentGroupToMap.SetKey(currentKeyToMap, key);
         }
 
         var keyCode = KeyCode.None;
@@ -111,7 +119,7 @@ namespace spaar.Mods.KeyManager
         }
         if (keyCode != KeyCode.None)
         {
-          currentGroupToMap.SetKey(keyCode);
+          currentGroupToMap.SetKey(currentKeyToMap, keyCode);
         }
       }
     }
@@ -192,10 +200,12 @@ namespace spaar.Mods.KeyManager
         if (GUI.tooltip == "")
         {
           currentGroupToMap = null;
+          currentKeyToMap = -1;
         }
         else
         {
-          currentGroupToMap = groups[int.Parse(GUI.tooltip)];
+          currentGroupToMap = groups[int.Parse(GUI.tooltip.Split('-')[0])];
+          currentKeyToMap = int.Parse(GUI.tooltip.Split('-')[1]);
         }
       }
 
@@ -232,8 +242,13 @@ namespace spaar.Mods.KeyManager
       }
       else
       {
-        GUILayout.Button(new GUIContent(group.Key.ToString(), tooltip),
-          Elements.Buttons.Red, GUILayout.Width(110f));
+        int i = 0;
+        do
+        {
+          GUILayout.Button(new GUIContent(group.Keys[i].ToString(), $"{tooltip}-{i}"),
+            Elements.Buttons.Red, GUILayout.Width(110f));
+          i++;
+        } while (group.Keys[i-1] != KeyCode.None);
       }
       GUILayout.EndHorizontal();
     }

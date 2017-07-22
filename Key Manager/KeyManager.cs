@@ -27,8 +27,17 @@ namespace spaar.Mods.KeyManager
         {
           var groupTag = $"keymanager-group-{i}";
           var bindings = groups[i].AssignedBindings;
+          var keys = groups[i].Keys;
+
           machineData.Write($"{groupTag}-name", groups[i].Name);
-          machineData.Write($"{groupTag}-key", groups[i].Key.ToString());
+
+          machineData.Write($"{groupTag}-keys-count", keys.Count);
+          for (int j = 0; j < keys.Count; j++)
+          {
+            var keyTag = $"{groupTag}-keys-{j}";
+            machineData.Write($"{keyTag}", keys[j].ToString());
+          }
+
           machineData.Write($"{groupTag}-bindings-count", bindings.Count);
           for (int j = 0; j < bindings.Count; j++)
           {
@@ -53,9 +62,25 @@ namespace spaar.Mods.KeyManager
         for (int i = 0; i < count; i++)
         {
           var groupTag = $"keymanager-group-{i}";
-          var group = new KeyGroup(
-            machineData.ReadString($"{groupTag}-name"),
-            (KeyCode)Enum.Parse(typeof(KeyCode), machineData.ReadString($"{groupTag}-key")));
+          var name = machineData.ReadString($"{groupTag}-name");
+          var keys = new List<KeyCode>();
+
+          // Support old data saved without multikeybind support
+          if (machineData.HasKey($"{groupTag}-keys-count"))
+          {
+            var keyCount = machineData.ReadInt($"{groupTag}-keys-count");
+            for (int j = 0; j < keyCount; j++)
+            {
+              var keyTag = $"{groupTag}-keys-{j}";
+              keys.Add((KeyCode) Enum.Parse(typeof(KeyCode), machineData.ReadString(keyTag)));
+            }
+          } else
+          {
+            keys.Add((KeyCode)Enum.Parse(typeof(KeyCode), machineData.ReadString($"{groupTag}-key")));
+          }
+
+          var group = new KeyGroup(name, keys);
+
           var bindingsCount = machineData.ReadInt($"{groupTag}-bindings-count");
           for (int j = 0; j < bindingsCount; j++)
           {

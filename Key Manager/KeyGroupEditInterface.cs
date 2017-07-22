@@ -113,9 +113,9 @@ namespace spaar.Mods.KeyManager
         GUILayout.Label(@"Click non-highlighted blocks to add them to the key group.
 Click highlighted blocks to remove them from the group.");
 
-        if (GUILayout.Button($"Assign all controls bound to {group.Key}"))
+        if (GUILayout.Button($"Assign all controls bound to {group.Keys[0]}"))
         {
-          group.AddAllWithKey(group.Key);
+          group.AddAllWithKey(group.Keys[0]);
         }
 
         if (GUILayout.Button("Exit assignment mode"))

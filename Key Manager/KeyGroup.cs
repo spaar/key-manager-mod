@@ -7,7 +7,7 @@ namespace spaar.Mods.KeyManager
   public class KeyGroup
   {
     public string Name { get; set; }
-    public KeyCode Key { get; private set; }
+    public List<KeyCode> Keys { get; private set; }
 
     private List<Keybinding> bindings;
 
@@ -16,19 +16,25 @@ namespace spaar.Mods.KeyManager
       get { return bindings.AsReadOnly(); }
     }
 
-    public KeyGroup(string name, KeyCode key)
+    public KeyGroup(string name, List<KeyCode> keys)
     {
       Name = name;
-      Key = key;
+      Keys = keys;
+      Keys.Add(KeyCode.None);
       bindings = new List<Keybinding>();
+    }
+
+    public KeyGroup(string name, KeyCode key) : this(name, new List<KeyCode>() {key})
+    {
+      
     }
 
     public void AddKeybinding(Keybinding binding)
     {
       // If the group does not yet have a key, use the one of the first assigned control
-      if (Key == KeyCode.None)
+      if (Keys[0] == KeyCode.None)
       {
-        Key = binding.Key.KeyCode[0];
+        Keys[0] = binding.Key.KeyCode[0];
       }
 
       bindings.Add(binding);
@@ -64,13 +70,26 @@ namespace spaar.Mods.KeyManager
       RemoveKeybinding(bindings.Find(b => b.Guid == block.Guid));
     }
 
-    public void SetKey(KeyCode keyCode)
+    // It is not allowed to call SetKey with an index >= Keys.Count
+    public void SetKey(int index, KeyCode keyCode)
     {
-      Key = keyCode;
+      if (index >= Keys.Count)
+      {
+        throw new ArgumentException("Index is too high.");
+      }
+      else if (index == Keys.Count - 1)
+      {
+        Keys[index] = keyCode;
+        Keys.Add(KeyCode.None);
+      }
+      else
+      {
+        Keys[index] = keyCode;
+      }
 
       foreach (var binding in bindings)
       {
-        binding.Key.AddOrReplaceKey(0, keyCode);
+        binding.Key.AddOrReplaceKey(index, keyCode);
       }
     }
 
