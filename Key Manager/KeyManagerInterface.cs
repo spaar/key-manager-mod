@@ -43,7 +43,10 @@ namespace spaar.Mods.KeyManager
       KeyCode.Keypad1, KeyCode.Keypad2, KeyCode.Keypad3,
       KeyCode.Keypad4, KeyCode.Keypad5, KeyCode.Keypad6,
       KeyCode.Keypad7, KeyCode.Keypad8, KeyCode.Keypad9,
-      KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.DownArrow
+      KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.DownArrow,
+      KeyCode.Period, KeyCode.Comma, KeyCode.Return,
+      KeyCode.KeypadPeriod, KeyCode.KeypadEnter,
+      KeyCode.KeypadDivide, KeyCode.KeypadMultiply, KeyCode.KeypadMinus, KeyCode.KeypadPlus,
     };
 
     public void SetActive()
