@@ -11,7 +11,7 @@ namespace spaar.Mods.KeyManager
     public override string Name { get; } = "keyManager";
     public override string DisplayName { get; } = "Key Manager";
     public override string Author { get; } = "spaar";
-    public override Version Version { get; } = new Version(0, 0, 1);
+    public override Version Version { get; } = new Version(1, 0, 0);
 
     // Technically the Harmony patches can't be undone, but they're
     // written in such a way that they don't cause any harm if the mod is unloaded at runtime.
