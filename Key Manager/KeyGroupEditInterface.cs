@@ -8,11 +8,13 @@ namespace spaar.Mods.KeyManager
 {
   public class KeyGroupEditInterface
   {
-    public readonly int WindowID = Util.GetWindowID();
+    public readonly int WindowID = ModLoader.Util.GetWindowID();
     private Rect windowRect;
 
     private KeyGroup group;
 
+    // Assigning blocks manually is not enabled atm, pending a good way to do it with multikeybind support.
+    // This only serves to remove blocks from groups instead.
     private bool assigningBlocks = false;
     private BlockBehaviour blockToAssign = null;
     private int selectedKeybind = -1;
@@ -58,9 +60,9 @@ namespace spaar.Mods.KeyManager
             {
               // Deselect block
               block.VisualController.SetNormal();
-              group.RemoveKeybinding(block);
+              group.RemoveAllBindingsWithBlock(block);
             }
-            else
+            /*else
             {
               // Blocks without keybinds can't be selected
               if (block.Keys.Count > 0)
@@ -69,7 +71,7 @@ namespace spaar.Mods.KeyManager
                 block.VisualController.SetHighlighted();
                 blockToAssign = block;
               }
-            }
+            }*/
           }
         }
       }
@@ -78,24 +80,24 @@ namespace spaar.Mods.KeyManager
       {
         // Highlight all assigned blocks
         // Need to do this every frame, as AddPiece is gonna try to de-highlight them after mouse-over
-        foreach (var binding in group.AssignedBindings)
+        foreach (var block in group.AllAssignedBlocks())
         {
-          binding.Block.VisualController.SetHighlighted();
+          block.VisualController.SetHighlighted();
         }
       }
 
       // If a keybind was selected, add it and go back to block selection mode
-      if (blockToAssign != null && selectedKeybind != -1)
+      /*if (blockToAssign != null && selectedKeybind != -1)
       {
         group.AddKeybinding(blockToAssign, selectedKeybind);
         selectedKeybind = -1;
         blockToAssign = null;
-      }
+      }*/
     }
 
     private void DoWindow(int id)
     {
-      if (blockToAssign != null)
+      /*if (blockToAssign != null)
       {
         GUILayout.Label("Select which keybind to add:");
         GUILayout.BeginHorizontal();
@@ -110,14 +112,15 @@ namespace spaar.Mods.KeyManager
         }
         GUILayout.EndHorizontal();
       }
-      else if (assigningBlocks)
+      else */if (assigningBlocks)
       {
-        GUILayout.Label(@"Click non-highlighted blocks to add them to the key group.
-Click highlighted blocks to remove them from the group.");
+        /*GUILayout.Label(@"Click non-highlighted blocks to add them to the key group.
+Click highlighted blocks to remove them from the group.");*/
+        GUILayout.Label("Click a highlighted block to remove it from the group.");
 
-        if (GUILayout.Button($"Assign all controls bound to {String.Join(" & ",group.Keys.GetRange(0, group.Keys.Count - 2).Select(k => k.ToString()).ToArray())}"))
+        if (GUILayout.Button($"Assign all controls bound to {group.KeyString()}"))
         {
-          group.AddAllWithKeys(group.Keys);
+          group.AddAllWithKeys();
         }
 
         if (GUILayout.Button("Exit assignment mode"))
@@ -178,9 +181,9 @@ Click highlighted blocks to remove them from the group.");
       AddPiece.disableBlockPlacement = false;
       AddPiece.disableBlockHighlight = false;
 
-      foreach (var binding in group.AssignedBindings)
+      foreach (var block in group.AllAssignedBlocks())
       {
-        binding.Block.VisualController.SetNormal();
+        block.VisualController.SetNormal();
       }
     }
   }

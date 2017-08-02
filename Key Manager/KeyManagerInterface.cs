@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using spaar.ModLoader;
 using spaar.ModLoader.Internal.Tools;
 using spaar.ModLoader.UI;
@@ -13,7 +14,7 @@ namespace spaar.Mods.KeyManager
 
     public KeyManager KeyManager { get; set; }
 
-    public readonly int WindowID = Util.GetWindowID();
+    public readonly int WindowID = ModLoader.Util.GetWindowID();
     private Rect windowRect;
     private Vector2 scrollPosition = new Vector2(0f, 0f);
 
@@ -97,7 +98,6 @@ namespace spaar.Mods.KeyManager
 
       if (toggleKey.Pressed())
       {
-        Debug.Log("Toggling interface");
         button.Value = !button.Value;
       }
 
@@ -112,6 +112,8 @@ namespace spaar.Mods.KeyManager
       }
       else if (currentGroupToMap != null)
       {
+        var keyToSet = KeyCode.None;
+
         if (Input.inputString.Length > 0 && !Input.inputString.Contains('\u0008' + ""))
         {
           var key = KeyCode.None;
@@ -122,8 +124,7 @@ namespace spaar.Mods.KeyManager
           }
           catch (Exception e) { }
 
-          if (key != KeyCode.None)
-            currentGroupToMap.SetKey(currentKeyToMap, key);
+          keyToSet = key;
         }
 
         var keyCode = KeyCode.None;
@@ -137,7 +138,20 @@ namespace spaar.Mods.KeyManager
         }
         if (keyCode != KeyCode.None)
         {
-          currentGroupToMap.SetKey(currentKeyToMap, keyCode);
+          keyToSet = keyCode;
+        }
+
+        if (keyToSet != KeyCode.None)
+        {
+          if (currentKeyToMap < currentGroupToMap.Keybindings.Keys.Count)
+          {
+            var previousKey = currentGroupToMap.Keybindings.Keys.ElementAt(currentKeyToMap);
+            currentGroupToMap.ChangeKey(previousKey, keyToSet);
+          }
+          else
+          {
+            currentGroupToMap.AddKey(keyToSet);
+          }
         }
       }
     }
@@ -201,7 +215,7 @@ namespace spaar.Mods.KeyManager
 
         if (GUILayout.Button("Add"))
         {
-          KeyManager.CreateKeyGroup("New key group", KeyCode.None);
+          KeyManager.CreateKeyGroup("New key group");
         }
 
         if (GUILayout.Button("Auto-Add"))
@@ -274,13 +288,15 @@ namespace spaar.Mods.KeyManager
       }
       else
       {
-        int i = 0;
-        do
+        var keys = group.Keybindings.Keys.ToList();
+        var i = 0;
+        for (; i < keys.Count; i++)
         {
-          GUILayout.Button(new GUIContent(group.Keys[i].ToString(), $"{tooltip}-{i}"),
+          GUILayout.Button(new GUIContent(keys[i].ToString(), $"{tooltip}-{i}"),
             Elements.Buttons.Red, GUILayout.Width(110f));
-          i++;
-        } while (group.Keys[i - 1] != KeyCode.None);
+        }
+        GUILayout.Button(new GUIContent("Add new", $"{tooltip}-{i}"),
+          Elements.Buttons.Red, GUILayout.Width(110f));
       }
       GUILayout.EndHorizontal();
     }

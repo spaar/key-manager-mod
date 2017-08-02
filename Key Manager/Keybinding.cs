@@ -4,29 +4,27 @@ namespace spaar.Mods.KeyManager
 {
   public class Keybinding
   {
-    public int KeyIndex { get; private set; }
+    public int MKeyIndex { get; private set; }
     public Guid Guid { get; private set; }
 
-    public MKey Key
-    {
-      get { return Block.Keys[KeyIndex]; }
-    }
+    public int KeyCodeIndex { get; private set; }
+
+    public MKey Key => Block.Keys[MKeyIndex];
 
     public BlockBehaviour Block
     {
       get { return Machine.Active().BuildingBlocks.Find(b => b.Guid == Guid); }
     }
 
-    public Keybinding(BlockBehaviour block, int keyIndex)
+    public Keybinding(BlockBehaviour block, int mKeyIndex, int keyCodeIndex) : this(block.Guid, mKeyIndex, keyCodeIndex)
     {
-      Guid = block.Guid;
-      KeyIndex = keyIndex;
     }
 
-    public Keybinding(Guid guid, int keyIndex)
+    public Keybinding(Guid guid, int mKeyIndex, int keyCodeIndex)
     {
       Guid = guid;
-      KeyIndex = keyIndex;
+      MKeyIndex = mKeyIndex;
+      KeyCodeIndex = keyCodeIndex;
     }
   }
 }

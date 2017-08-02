@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.AccessControl;
 using spaar.ModLoader;
 using UnityEngine;
 
@@ -23,28 +22,30 @@ namespace spaar.Mods.KeyManager
       {
         var machineData = info.MachineData;
 
-        machineData.Write("keymanager-group-count", groups.Count);
+        const string keyManagerTag = "keymanager-v2";
+        machineData.Write($"{keyManagerTag}-groups-count", groups.Count);
         for (int i = 0; i < groups.Count; i++)
         {
-          var groupTag = $"keymanager-group-{i}";
-          var bindings = groups[i].AssignedBindings;
-          var keys = groups[i].Keys;
+          var groupTag = $"{keyManagerTag}-groups-{i}";
+          var bindings = groups[i].Keybindings.ToList();
 
           machineData.Write($"{groupTag}-name", groups[i].Name);
 
-          machineData.Write($"{groupTag}-keys-count", keys.Count);
-          for (int j = 0; j < keys.Count; j++)
-          {
-            var keyTag = $"{groupTag}-keys-{j}";
-            machineData.Write($"{keyTag}", keys[j].ToString());
-          }
-
-          machineData.Write($"{groupTag}-bindings-count", bindings.Count);
+          machineData.Write($"{groupTag}-keys-count", bindings.Count);
           for (int j = 0; j < bindings.Count; j++)
           {
-            var bindingTag = $"{groupTag}-bindings-{j}";
-            machineData.Write($"{bindingTag}-guid", bindings[j].Guid.ToString());
-            machineData.Write($"{bindingTag}-keyIndex", bindings[j].KeyIndex);
+            var keyTag = $"{groupTag}-keys-{j}";
+            machineData.Write($"{keyTag}-key", bindings[j].Key.ToString());
+
+            machineData.Write($"{keyTag}-bindings-count", bindings[j].Value.Count);
+            for (int k = 0; k < bindings[j].Value.Count; k++)
+            {
+              var bindingTag = $"{keyTag}-bindings-{k}";
+              machineData.Write($"{bindingTag}-guid", bindings[j].Value[k].Guid.ToString());
+              machineData.Write($"{bindingTag}-keyIndex", bindings[j].Value[k].MKeyIndex);
+              machineData.Write($"{bindingTag}-keyCodeIndex", bindings[j].Value[k].KeyCodeIndex);
+            }
+
           }
         }
       };
@@ -54,43 +55,41 @@ namespace spaar.Mods.KeyManager
         groups.Clear();
         var machineData = info.MachineData;
 
-        if (!machineData.HasKey("keymanager-group-count"))
+        const string keyManagerTag = "keymanager-v2";
+
+        if (!machineData.HasKey($"{keyManagerTag}-groups-count"))
           return;
 
-        var count = machineData.ReadInt("keymanager-group-count");
+        var count = machineData.ReadInt($"{keyManagerTag}-groups-count");
         groups.Capacity = count;
 
         for (int i = 0; i < count; i++)
         {
-          var groupTag = $"keymanager-group-{i}";
+          var groupTag = $"{keyManagerTag}-groups-{i}";
           var name = machineData.ReadString($"{groupTag}-name");
-          var keys = new List<KeyCode>();
 
-          // Support old data saved without multikeybind support
-          if (machineData.HasKey($"{groupTag}-keys-count"))
+          var group = new KeyGroup(name);
+
+          var keyCount = machineData.ReadInt($"{groupTag}-keys-count");
+          for (int j = 0; j < keyCount; j++)
           {
-            var keyCount = machineData.ReadInt($"{groupTag}-keys-count");
-            for (int j = 0; j < keyCount; j++)
+            var keyTag = $"{groupTag}-keys-{j}";
+            var key = Util.ParseEnum<KeyCode>(machineData.ReadString($"{keyTag}-key"));
+
+            var bindingsCount = machineData.ReadInt($"{keyTag}-bindings-count");
+            for (int k = 0; k < bindingsCount; k++)
             {
-              var keyTag = $"{groupTag}-keys-{j}";
-              keys.Add((KeyCode) Enum.Parse(typeof(KeyCode), machineData.ReadString(keyTag)));
+              var bindingTag = $"{keyTag}-bindings-{k}";
+
+              var guid = new Guid(machineData.ReadString($"{bindingTag}-guid"));
+              var keyIndex = machineData.ReadInt($"{bindingTag}-keyIndex");
+              var keyCodeIndex = machineData.ReadInt($"{bindingTag}-keyCodeIndex");
+
+              var binding = new Keybinding(guid, keyIndex, keyCodeIndex);
+              group.AddKeybinding(key, binding);
             }
-          } else
-          {
-            keys.Add((KeyCode)Enum.Parse(typeof(KeyCode), machineData.ReadString($"{groupTag}-key")));
           }
 
-          var group = new KeyGroup(name, keys);
-
-          var bindingsCount = machineData.ReadInt($"{groupTag}-bindings-count");
-          for (int j = 0; j < bindingsCount; j++)
-          {
-            var bindingTag = $"{groupTag}-bindings-{j}";
-            var binding = new Keybinding(
-              new Guid(machineData.ReadString($"{bindingTag}-guid")),
-              machineData.ReadInt($"{bindingTag}-keyIndex"));
-            group.AddKeybinding(binding);
-          }
           groups.Add(group);
         }
 
@@ -103,13 +102,10 @@ namespace spaar.Mods.KeyManager
       {
         foreach (var group in groups)
         {
-          foreach (var binding in new List<Keybinding>(group.AssignedBindings.Where(b => b.Block == null)))
-          {
-            group.RemoveKeybinding(binding);
-          }
+          group.RemoveAllBindingsWithoutBlock();
         }
         // If any groups were completely emtpied by the above checks, delete them entirely
-        groups = new List<KeyGroup>(groups.Where(g => g.AssignedBindings.Count > 0));
+        groups.RemoveAll(g => g.HasNoBindings());
       };
     }
 
@@ -119,9 +115,9 @@ namespace spaar.Mods.KeyManager
       groups.Clear();
     }
 
-    public void CreateKeyGroup(string name, KeyCode key)
+    public void CreateKeyGroup(string name)
     {
-      groups.Add(new KeyGroup(name, key));
+      groups.Add(new KeyGroup(name));
     }
 
     public void DeleteKeyGroup(KeyGroup group)
@@ -157,7 +153,7 @@ namespace spaar.Mods.KeyManager
       {
         if (!(obj is AutoAddGroupId))
           return false;
-        var other = (AutoAddGroupId) obj;
+        var other = (AutoAddGroupId)obj;
         return other.type == type && other.keyIndex == keyIndex && other.keys.SequenceEqual(keys);
       }
     }
@@ -181,9 +177,12 @@ namespace spaar.Mods.KeyManager
 
           if (!groups.ContainsKey(id))
           {
-            groups.Add(id, new KeyGroup($"{block.name} {block.Keys[i].DisplayName}", block.Keys[i].KeyCode));
+            groups.Add(id, new KeyGroup($"{block.name} {block.Keys[i].DisplayName}"));
           }
-          groups[id].AddKeybinding(block, i);
+          for (int j = 0; j < id.keys.Count; j++)
+          {
+            groups[id].AddKeybinding(id.keys[j], new Keybinding(block, i, j));
+          }
         }
       }
 

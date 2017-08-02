@@ -71,6 +71,7 @@
     <Compile Include="Patches\MachineObjectTrackerPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Textures.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
