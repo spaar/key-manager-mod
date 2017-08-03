@@ -143,53 +143,28 @@ namespace spaar.Mods.KeyManager
       groups.Insert(index + 1, group);
     }
 
-    private struct AutoAddGroupId
-    {
-      public Type type;
-      public int keyIndex;
-      public List<KeyCode> keys;
-
-      public override bool Equals(object obj)
-      {
-        if (!(obj is AutoAddGroupId))
-          return false;
-        var other = (AutoAddGroupId)obj;
-        return other.type == type && other.keyIndex == keyIndex && other.keys.SequenceEqual(keys);
-      }
-    }
-
     public void AutoAddGroups()
     {
-      var groups = new Dictionary<AutoAddGroupId, KeyGroup>();
+      var groups = new Dictionary<KeyCode, KeyGroup>();
 
       foreach (var block in Machine.Active().BuildingBlocks)
       {
-        if (block.Keys.Count == 0) continue;
-
         for (int i = 0; i < block.Keys.Count; i++)
         {
-          var id = new AutoAddGroupId()
+          var mKey = block.Keys[i];
+          for (int j = 0; j < mKey.KeyCode.Count; j++)
           {
-            type = block.GetType(),
-            keyIndex = i,
-            keys = new List<KeyCode>(block.Keys[i].KeyCode)
-          };
-
-          if (!groups.ContainsKey(id))
-          {
-            groups.Add(id, new KeyGroup($"{block.name} {block.Keys[i].DisplayName}"));
-          }
-          for (int j = 0; j < id.keys.Count; j++)
-          {
-            groups[id].AddKeybinding(id.keys[j], new Keybinding(block, i, j));
+            var key = mKey.KeyCode[j];
+            if (!groups.ContainsKey(key))
+            {
+              groups[key] = new KeyGroup(key.ToString());
+            }
+            groups[key].AddKeybinding(block, i, j);
           }
         }
       }
 
-      foreach (var group in groups.Values)
-      {
-        this.groups.Add(group);
-      }
+      this.groups.AddRange(groups.Values);
     }
   }
 }
