@@ -160,7 +160,8 @@ namespace spaar.Mods.KeyManager
       if (!Keybindings.ContainsKey(previousKey)) return;
 
       // If the key is already present, delete associated bindings and keys.
-      if (Keybindings.ContainsKey(newKey))
+      // Don't delete the last key present though.
+      if (Keybindings.ContainsKey(newKey) && Keybindings.Keys.Count > 1)
       {
         RemoveAllBindingsWithKey(previousKey);
         return;
@@ -175,7 +176,6 @@ namespace spaar.Mods.KeyManager
       bindings.ForEach(b =>
       {
         b.Key.AddOrReplaceKey(b.KeyCodeIndex, newKey);
-        Debug.Log($"Setting key {b.MKeyIndex} of {b.Block} at {b.KeyCodeIndex} to {newKey}");
       });
     }
 
