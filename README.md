@@ -56,6 +56,7 @@ Assigning controls follows the following rules:
 - Any keys assigned to the group but not the control are added to the control.
 - Any keys assigned to the control but not the group are left unmodified on the control.
 - When later remapping keys in the Key Manager interface, keys that were left unmodified according to the previous rule, are always left untouched.
+
 Lastly, if you edit the keybindings on the control manually, the key manager will behave as follows whenever keys are remapped in its interface:
 - The key manager stores at what "index", so at what position, the keys it was told to add to the group are in the case of multikeybinds.
 - If you change a key at a position that was added to the group, it will be changed again by the key manager when mapping keys through it.
