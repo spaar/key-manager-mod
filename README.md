@@ -26,8 +26,12 @@ And lastly, you can of course modify the machine's Key Manager data as described
 
 #### 2. Create a machine with Key Manager support
 
+*Note:* Currently the key manager is mostly intended to be used on finished machines to make them more player-friendly.
+Different ways to assign controls are being considered to maybe make it more useful while building in the future.
+
 Key Manager organizes machine controls in so-called Key Groups: A group has a name that is displayed to users as well as block controls assigned to it.
 The Key Manager will then allow you and users of the machine to assign a new key to all of the assigned controls at once.
+It also supports multiple keys for a single control.
 
 A simple car might have two groups for example, "Forward" and "Reverse", each having the corresponding controls of the wheels assigned to it.
 
@@ -35,13 +39,29 @@ To configure Key Manager support, open the Key Manager window using its button i
 Start editing the Key Manager data by pressing the "Edit" button in the top right of the window. You exit edit mode with the same button.
 Create a group by pressing the "Add" button.
 Edit a group by pressing the "..." button next to its name. A window will open that allows you to change the group's name as well as assign controls to it.
-Assign controls by pressing the "(Un-)Assign blocks" button. All currently assigned blocks will be highlighted.
-To assign a new control, click a non-highlighted block (that has key controls) and choose which control you want to map in the window that appears.
+Before assigning controls, you need to assign one or multiple keys to the group. To do so, exit edit mode, hover over the "Add new" field and press a key.
+To assign controls go back into edit mode, open the detail dialog for the group and press the "(Un-)Assign blocks" button. All currently assigned blocks will be highlighted.
+A button will appear that lets you assign all controls that currently have one or more of the keys of the group assigned to them.
+For details on how controls are assigned to groups, see [How controls are assigned](#how-controls-are-assigned).
 To unassign a previously assigned control, click the highlighted block. It will be removed from the group and the highlight will disappear.
 
 There is also an auto-add feature. It will automatically attempt to group all controls of the same block type that currently are assigned to the same key.
 It is mostly intended to serve as a quick starting point for configuring an existing machine for use with the Key Manager. You can then edit the groups
 as normal from there.
+
+## How controls are assigned
+
+A group has one or multiple keys assigned to it. When you use the button to assign controls, all controls that have _at least_ one of the group's keys assigned are added to the group.
+Assigning controls follows the following rules:
+- Any keys assigned to the group but not the control are added to the control.
+- Any keys assigned to the control but not the group are left unmodified on the control.
+- When later remapping keys in the Key Manager interface, keys that were left unmodified according to the previous rule, are always left untouched.
+Lastly, if you edit the keybindings on the control manually, the key manager will behave as follows whenever keys are remapped in its interface:
+- The key manager stores at what "index", so at what position, the keys it was told to add to the group are in the case of multikeybinds.
+- If you change a key at a position that was added to the group, it will be changed again by the key manager when mapping keys through it.
+- If you change a key that was not added to the group, such as in the case of the second rule above, the key manager will leave it alone.
+- If you add a new key to a control after assigning the control to a group, the key manager will also leave it alone.
+
 
 ## License
 
