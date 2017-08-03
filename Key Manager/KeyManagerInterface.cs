@@ -183,6 +183,21 @@ namespace spaar.Mods.KeyManager
       modifiyingGroup = null;
     }
 
+    public void EditNextGroup()
+    {
+      if (modifiyingGroup == null) return;
+
+      var groups = KeyManager.KeyGroups;
+      var index = groups.IndexOf(modifiyingGroup);
+      index++;
+      if (index >= groups.Count)
+      {
+        index = 0;
+      }
+
+      modifiyingGroup = groups[index];
+    }
+
     private void DoWindow(int id)
     {
       var editRect = new Rect(windowRect.width - 40, 6, 32, 32);

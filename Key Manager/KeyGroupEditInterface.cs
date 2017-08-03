@@ -13,6 +13,10 @@ namespace spaar.Mods.KeyManager
 
     private KeyGroup group;
 
+    // Reference to last edited group after pressing Tab, used to detect that we're now displaying the new group.
+    // null after the first frame where the new group was displayed.
+    private KeyGroup oldGroup;
+
     // Assigning blocks manually is not enabled atm, pending a good way to do it with multikeybind support.
     // This only serves to remove blocks from groups instead.
     private bool assigningBlocks = false;
@@ -112,7 +116,8 @@ namespace spaar.Mods.KeyManager
         }
         GUILayout.EndHorizontal();
       }
-      else */if (assigningBlocks)
+      else */
+      if (assigningBlocks)
       {
         /*GUILayout.Label(@"Click non-highlighted blocks to add them to the key group.
 Click highlighted blocks to remove them from the group.");*/
@@ -145,7 +150,18 @@ Click highlighted blocks to remove them from the group.");*/
         };
         GUILayout.Label("Name: ", textStyle);
 
+        GUI.SetNextControlName("txt-group-name");
         group.Name = GUILayout.TextField(group.Name);
+
+        // Select all text after cycling through groups with tab
+        if (oldGroup != null && oldGroup != group)
+        {
+          var te = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
+          te.SelectAll();
+
+          oldGroup = null;
+        }
+
         GUILayout.EndHorizontal();
 
         GUILayout.FlexibleSpace();
@@ -154,6 +170,17 @@ Click highlighted blocks to remove them from the group.");*/
         {
           EnterBlockAssignmentMode();
         }
+      }
+
+      // Cycle through groups with tab when editing the name
+      if (GUI.GetNameOfFocusedControl() == "txt-group-name"
+        && Event.current.type == EventType.KeyDown
+        && Event.current.keyCode == KeyCode.Tab)
+      {
+        KeyManagerInterface.Instance.EditNextGroup();
+
+        // Select all text once we're displaying the new group
+        oldGroup = group;
       }
 
       GUI.DragWindow();
