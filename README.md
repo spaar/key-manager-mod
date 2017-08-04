@@ -1,7 +1,7 @@
 # Key Manager
 
 Key Manager is a mod for Besiege that allows bulk key remapping and easier discoverability of machine controls.
-Is is purely an additional feature for machines: If a user of the machine has the mod installed, they will get all the benefits
+It is purely an additional feature for machines: If a user of the machine has the mod installed, they will get all the benefits
 but if they don't, the machine will still work just fine.
 The Key Manager also supports adding multiple keybinds to a single block control.
 
@@ -39,6 +39,7 @@ To configure Key Manager support, open the Key Manager window using its button i
 Start editing the Key Manager data by pressing the "Edit" button in the top right of the window. You exit edit mode with the same button.
 Create a group by pressing the "Add" button.
 Edit a group by pressing the "..." button next to its name. A window will open that allows you to change the group's name as well as assign controls to it.
+To quickly edit the names of multiple groups, you can cycle through them with Tab while focusing the name text field.
 Before assigning controls, you need to assign one or multiple keys to the group. To do so, exit edit mode, hover over the "Add new" field and press a key.
 To assign controls go back into edit mode, open the detail dialog for the group and press the "(Un-)Assign blocks" button. All currently assigned blocks will be highlighted.
 A button will appear that lets you assign all controls that currently have one or more of the keys of the group assigned to them.
