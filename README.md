@@ -36,18 +36,18 @@ A simple car might have two groups for example, "Forward" and "Reverse", each ha
 
 To configure Key Manager support, open the Key Manager window using its button in the Settings drop-down (where you toggle the god tools).
 
-[Open interface](docs/open-interface.gif)
+![Open interface](docs/open-interface.gif)
 
 Start editing the Key Manager data by pressing the "Edit" button in the top right of the window. You exit edit mode with the same button.
 Create a group by pressing the "Add" button.
 Edit a group by pressing the "..." button next to its name. A window will open that allows you to change the group's name as well as assign controls to it.
 
-[Create group](docs/create-group.gif)
+![Create group](docs/create-group.gif)
 
 To quickly edit the names of multiple groups, you can cycle through them with Tab while focusing the name text field.
 In edit mode, you can also manage groups by re-ordering or deleting them.
 
-[Reorder groups](docs/reordering.gif)
+![Reorder groups](docs/reordering.gif)
 
 Before assigning controls, you need to assign one or multiple keys to the group. To do so, exit edit mode, hover over the "Add new" field and press a key.
 To assign controls go back into edit mode, open the detail dialog for the group and press the "(Un-)Assign blocks" button. All currently assigned blocks will be highlighted.
@@ -55,13 +55,13 @@ A button will appear that lets you assign all controls that currently have one o
 For details on how controls are assigned to groups, see [How controls are assigned](#how-controls-are-assigned).
 To unassign a previously assigned control, click the highlighted block. It will be removed from the group and the highlight will disappear.
 
-[Assign controls to group](docs/assign-group-manually.gifv)
+![Assign controls to group](docs/assign-group-manually.gif)
 
 There is also an auto-add feature. It will automatically attempt to group all controls of the same block type that currently are assigned to the same key.
 It is mostly intended to serve as a quick starting point for configuring an existing machine for use with the Key Manager. You can then edit the groups
 as normal from there.
 
-[Auto-add](docs/auto-add.gifv)
+![Auto-add](docs/auto-add.gif)
 
 ## How controls are assigned
 
