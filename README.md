@@ -9,9 +9,8 @@ The Key Manager also supports adding multiple keybinds to a single block control
 
 0. Install spaar's Mod Loader if you haven't already.
 1. [Download KeyManager.zip](https://github.com/spaar/key-manager-mod/releases/latest).
-2. Out of it, extract KeyManager.dll and the Resources/ folder to Besiege_Data/Mods/.
-   As a result, KeyManager.dll should be in Mods/ and a Mods/Resources/KeyManager/ folder should exist.
-   If that is not the case, you did not extract the files to the correct location.
+2. Out of it, extract KeyManager.dll to Besiege_Data/Mods/.
+   The .zip file also includes a copy of this README and the mod's license but these files are not required to run the mod.
    
 ## Usage
 
