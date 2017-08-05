@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
+using spaar.ModLoader;
 using UnityEngine;
 
 namespace spaar.Mods.KeyManager
@@ -11,7 +12,7 @@ namespace spaar.Mods.KeyManager
     public override string Name { get; } = "keyManager";
     public override string DisplayName { get; } = "Key Manager";
     public override string Author { get; } = "spaar";
-    public override Version Version { get; } = new Version(1, 0, 0);
+    public override Version Version { get; } = new Version(1, 1, 0);
 
     // Technically the Harmony patches can't be undone, but they're
     // written in such a way that they don't cause any harm if the mod is unloaded at runtime.
@@ -26,11 +27,18 @@ namespace spaar.Mods.KeyManager
       harmony.PatchAll(Assembly.GetExecutingAssembly());
       
       // Load all GUI textures
-      Textures.Init();
+      Resources.Init();
 
       // Create key manager
       var manager = new KeyManager();
       KeyManagerInterface.Instance.KeyManager = manager;
+
+      // Allow showing the example machine again even after dismissing it
+      Commands.RegisterCommand("resetExampleMachine", (args, nArgs) =>
+      {
+        Configuration.SetBool("dismissed-example-dialog", false);
+        return "Reset.";
+      }, "Have the Key Manager offer to show the example machine again.");
     }
 
     public override void OnUnload()

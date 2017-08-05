@@ -135,8 +135,8 @@ Click highlighted blocks to remove them from the group.");*/
       }
       else
       {
-        var editRect = new Rect(windowRect.width - 40, 6, 32, 32);
-        if (GUI.Button(editRect, "X"))
+        var closeRect = new Rect(windowRect.width - 40, 6, 32, 32);
+        if (GUI.Button(closeRect, "X"))
         {
           KeyManagerInterface.Instance.CloseGroupEdit();
         }

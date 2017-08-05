@@ -26,6 +26,9 @@ namespace spaar.Mods.KeyManager
     private KeyGroup modifiyingGroup = null;
     private KeyGroupEditInterface editInterface = new KeyGroupEditInterface();
 
+    private bool showExampleDialog = false;
+    private ExampleMachineDialog exampleDialog = new ExampleMachineDialog();
+
     private GUIStyle IconButtonStyle;
 
     // The mechanics of the "hover-to-remap" keymap technique are mostly taken from the mod loader's Keymapper
@@ -54,11 +57,6 @@ namespace spaar.Mods.KeyManager
       KeyCode.KeypadDivide, KeyCode.KeypadMultiply, KeyCode.KeypadMinus, KeyCode.KeypadPlus,
     };
 
-    public void SetActive()
-    {
-      button.Value = true;
-    }
-
     public void Start()
     {
       DontDestroyOnLoad(this);
@@ -67,7 +65,7 @@ namespace spaar.Mods.KeyManager
       {
         Text = "Keys",
         Value = false,
-        OnToggle = val => active = val
+        OnToggle = OnInterfaceToggle
       };
       button.Create();
 
@@ -87,6 +85,26 @@ namespace spaar.Mods.KeyManager
       Configuration.SetFloat("main-y", windowRect.y);
       editInterface.SaveWindowPosition();
       Configuration.Save();
+    }
+
+    public void SetActive()
+    {
+      button.Value = true;
+
+      // Don't show the example machine dialog if we just loaded a machine with key manager support.
+      showExampleDialog = false;
+    }
+
+    private void OnInterfaceToggle(bool value)
+    {
+      active = value;
+
+      // Show example machine dialog if not previously dismissed
+      var dismissedExampleDialog = Configuration.GetBool("dismissed-example-dialog", false);
+      if (!dismissedExampleDialog)
+      {
+        showExampleDialog = true;
+      }
     }
 
     public void Update()
@@ -176,6 +194,21 @@ namespace spaar.Mods.KeyManager
       {
         editInterface.Show(modifiyingGroup);
       }
+
+      if (showExampleDialog)
+      {
+        exampleDialog.Show();
+      }
+    }
+
+    public void CloseExampleDialog(bool dismissed)
+    {
+      showExampleDialog = false;
+
+      if (dismissed)
+      {
+        Configuration.SetBool("dismissed-example-dialog", true);
+      }
     }
 
     public void CloseGroupEdit()
@@ -202,7 +235,7 @@ namespace spaar.Mods.KeyManager
     {
       var editRect = new Rect(windowRect.width - 40, 6, 32, 32);
 
-      if (GUI.Button(editRect, Textures.Edit, IconButtonStyle))
+      if (GUI.Button(editRect, Resources.Edit, IconButtonStyle))
       {
         editMode = !editMode;
         if (!editMode) modifiyingGroup = null;
@@ -295,7 +328,7 @@ namespace spaar.Mods.KeyManager
           KeyManager.MoveDown(index);
         }
 
-        if (GUILayout.Button(Textures.Delete, IconButtonStyle, GUILayout.Height(28f), GUILayout.Width(28f)))
+        if (GUILayout.Button(Resources.Delete, IconButtonStyle, GUILayout.Height(28f), GUILayout.Width(28f)))
         {
           if (modifiyingGroup == group) modifiyingGroup = null;
           KeyManager.DeleteKeyGroup(group);

@@ -5,6 +5,9 @@ It is purely an additional feature for machines: If a user of the machine has th
 but if they don't, the machine will still work just fine.
 The Key Manager also supports adding multiple keybinds to a single block control.
 
+Many thanks to Redstoneman for his immense help in creating this mod!
+He helped design how it should work, find any bugs and supplied the explanation GIFs and his F-22 for inclusion as example machine.
+
 ## Installation
 
 0. Install spaar's Mod Loader if you haven't already.
@@ -63,6 +66,13 @@ as normal from there.
 
 ![Auto-add](docs/auto-add.gif)
 
+## Example machine
+
+Want to see an example of how the key manager can be used to enhance a machine?
+Take a look at Redstoneman's [F-22 Raptor](http://steamcommunity.com/sharedfiles/filedetails/?id=936738075), the first machine to support it.
+The machine is also included in the mod, just open the interface and you will be asked whether you want to try it out.
+(If you dismissed the pop-up but would like to see it again, open the console by pressing Ctrl+K and execute the "resetExampleMachine" command.)
+
 ## How controls are assigned
 
 A group has one or multiple keys assigned to it. When you use the button to assign controls, all controls that have _at least_ one of the group's keys assigned are added to the group.
@@ -76,7 +86,6 @@ Lastly, if you edit the keybindings on the control manually, the key manager wil
 - If you change a key at a position that was added to the group, it will be changed again by the key manager when mapping keys through it.
 - If you change a key that was not added to the group, such as in the case of the second rule above, the key manager will leave it alone.
 - If you add a new key to a control after assigning the control to a group, the key manager will also leave it alone.
-
 
 ## License
 
